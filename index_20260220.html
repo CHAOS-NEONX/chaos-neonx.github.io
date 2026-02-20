@@ -218,43 +218,6 @@
       .nav a{ padding: 9px 12px; }
     }
 
-    /* ✅ Mobile header layout: brand on top, nav below */
-    @media (max-width: 720px){
-      .header-inner{
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 10px 16px;
-      }
-
-      .brand{
-        width: 100%;
-        gap: 10px;
-      }
-
-      .brand h1{
-        font-size: 16px;
-        line-height: 1.1;
-      }
-      .brand .sub{
-        font-size: 12.5px;
-        margin-top: 3px;
-      }
-
-      nav.nav{
-        width: 100%;
-        justify-content: center;
-        gap: 8px;
-        padding-top: 10px;
-        border-top: 1px solid rgba(13,27,42,.08);
-      }
-
-      .nav a{
-        padding: 8px 10px;
-        font-size: 13px;
-      }
-    }
-
     .hero{
       padding:56px 0 26px;
       display:grid;
@@ -954,13 +917,21 @@
         <div class="card">
           <ul>
             <li><strong>Sessions:</strong> <span class="mono">ATTACH</span> to a target and <span class="mono">CLOSE</span> (disconnect) at any time.</li>
+
             <li><strong>Views:</strong> switch seamlessly between <span class="mono">ASM</span>, <span class="mono">C</span>, and <span class="mono">MIX</span> in the same view.</li>
+
             <li><strong>Stepping:</strong> instruction-level stepping and C-statement stepping, including mixed <span class="mono">Step Into</span> / <span class="mono">Step Out</span>.</li>
+
             <li><strong>Breakpoints:</strong> set by <span class="mono">ADDRESS</span> / <span class="mono">FILE:LINE</span> / <span class="mono">SYMBOL</span>, with both graphical and command-line configuration.</li>
+
             <li><strong>Conditional breaks:</strong> register breakpoints and advanced data breakpoints (watchpoints).</li>
+
             <li><strong>Run-To:</strong> run-to by <span class="mono">ADDRESS</span> / <span class="mono">FILE:LINE</span> / <span class="mono">SYMBOL</span>, with both graphical and command-line workflows.</li>
+
             <li><strong>Live inspection:</strong> continuously refreshed <strong>WATCH</strong> window and <strong>MEMORY</strong> view.</li>
+
             <li><strong>Stack analysis:</strong> advanced stack analyzer with call-frame selection and synchronized locals + stack viewers.</li>
+
             <li><strong>History:</strong> the <strong>INFO</strong> area keeps historical records for quick backtracking.</li>
           </ul>
         </div>
