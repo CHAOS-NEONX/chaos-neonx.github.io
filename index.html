@@ -70,7 +70,7 @@
     }
 
     *{box-sizing:border-box}
-    html, body{min-height:100%} /* was height:100% (can break sticky in some browsers) */
+    html, body{min-height:100%}
 
     body{
       margin:0;
@@ -91,9 +91,7 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Header uses Inter */
     header, header *{ font-family: var(--font-body); }
-    /* Hero keeps display vibe */
     .kicker, .title, .lead, .btn { font-family: var(--font-display); }
     main{ font-family: var(--font-body); font-size: var(--fz-body); }
 
@@ -218,43 +216,32 @@
       .nav a{ padding: 9px 12px; }
     }
 
-    /* Mobile header layout: brand on top, nav below */
-	@media (max-width: 720px){
+    @media (max-width: 720px){
+      .header-inner{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 16px;
+      }
 
-	  .header-inner{
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 12px;
-		padding: 12px 16px;
-	  }
+      .brand{ width:100%; gap:10px; }
+      .brand h1{ font-size:17px; }
+      .brand .sub{ font-size:13px; }
 
-	  .brand{
-		width:100%;
-		gap:10px;
-	  }
+      nav.nav{
+        width:100%;
+        justify-content:center;
+        flex-wrap:wrap;
+        gap:10px;
+        padding-top:12px;
+        border-top:1px solid rgba(13,27,42,.08);
+      }
 
-	  .brand h1{
-		font-size:17px;
-	  }
-
-	  .brand .sub{
-		font-size:13px;
-	  }
-
-	  nav.nav{
-		width:100%;
-		justify-content:center;
-		flex-wrap:wrap;
-		gap:10px;
-		padding-top:12px;
-		border-top:1px solid rgba(13,27,42,.08);
-	  }
-
-	  .nav a{
-		font-size:15px;        /* 原来13px → 提升到15px */
-		padding:10px 14px;     /* 更好点击 */
-	  }
-	}
+      .nav a{
+        font-size:15px;
+        padding:10px 14px;
+      }
+    }
 
     .hero{
       padding:6px 0 26px;
@@ -536,6 +523,14 @@
     }
     .track::-webkit-scrollbar{display:none}
     .track .card{ flex: 0 0 330px; }
+    #functions .track .card{
+	  flex: 0 0 calc(50% - 8px);
+	}
+	
+	@media (max-width: 768px){
+	 #functions .track .card{ flex: 0 0 100%; }
+    }
+    
     @media (max-width:420px){ .track .card{ flex-basis: 86vw; } }
 
     .arrow{
@@ -754,6 +749,39 @@
       font-weight: 700;
     }
 
+    /* ====== Functions carousel card content ====== */
+    .funcPre{
+      margin: 0;
+      padding: 10px 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(13,27,42,.10);
+      background: rgba(255,255,255,.72);
+      font-family: var(--font-mono);
+      font-size: 12.8px;
+      line-height: 1.55;
+      color: rgba(13,27,42,.90);
+      white-space: pre;
+      overflow-x: auto;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
+      position: relative;
+      z-index: 1;
+    }
+    .funcPre::-webkit-scrollbar{ height: 10px; }
+    .funcPre::-webkit-scrollbar-thumb{
+      background: rgba(13,27,42,.18);
+      border-radius: 999px;
+    }
+
+    .funcCardNote{
+      margin-top: 10px;
+      color: rgba(13,27,42,.62);
+      font-size: 12.8px;
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+      font-weight: 650;
+    }
+
     @media (prefers-reduced-motion: reduce){
       .grid, .orb{ animation:none !important; }
       *{ scroll-behavior:auto !important; }
@@ -813,6 +841,7 @@
       <nav class="nav" aria-label="site">
         <a href="#features">Features</a>
         <a href="#capabilities">Capabilities</a>
+        <a href="#functions">Functions</a>
         <a href="#roadmap">Roadmap</a>
         <a href="#environment">Environment</a>
         <a href="#status">Status</a>
@@ -964,6 +993,122 @@
             <li><strong>Stack analysis:</strong> advanced stack analyzer with call-frame selection and synchronized locals + stack viewers.</li>
             <li><strong>History:</strong> the <strong>INFO</strong> area keeps historical records for quick backtracking.</li>
           </ul>
+        </div>
+      </section>
+
+      <!-- Functions carousel -->
+      <section id="functions">
+        <div class="secHead">
+          <h2>Functions</h2>
+          <p>CLI cheatsheet · grouped commands</p>
+        </div>
+
+        <div class="carousel fadeEdge" data-carousel>
+          <button class="arrow left" type="button" aria-label="Previous" data-prev>
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
+          </button>
+
+          <div class="track" data-track>
+            <div class="card">
+              <h3>Device & Session</h3>
+              <pre class="funcPre">
+list devices              - list devices
+device &lt;num|name&gt;         - set device
+if                        - interface selection
+connect                   - connect to previously selected device
+attach                    - connect to target
+close                     - disconnect from target</pre>
+              <p class="funcCardNote">Pick a device, choose interface, then <span class="mono">attach</span> to start a session.</p>
+            </div>
+
+            <div class="card">
+              <h3>Symbols & ELF</h3>
+              <pre class="funcPre">symfile &lt;file&gt;               - load ELF/DWARF or map/nm
+elf &lt;path&gt;                   - set elf path
+download &lt;addr&gt; / dl         - download elf</pre>
+              <p class="funcCardNote">Load debug symbols and set ELF path before downloading.</p>
+            </div>
+
+            <div class="card">
+              <h3>Run & Step</h3>
+              <pre class="funcPre">
+g                         - go / run
+i                         - step one instruction
+step                      - step
+s                         - step one C line
+si                        - step into the callee
+so                        - step out to next C statement
+nextc                     - step to next C statement
+rt &lt;sym|file:line|*A&gt;     - run to location
+rstart                    - restart cpu core
+rstarth                   - system reset and stop at Reset_Handler</pre>
+              <p class="funcCardNote">Use <span class="mono">rt</span> for quick run-to and <span class="mono">nextc</span>/<span class="mono">so</span> for C-statement flows.</p>
+            </div>
+
+            <div class="card">
+              <h3>Inspect & Memory</h3>
+              <pre class="funcPre">
+r                            - print registers
+set reg &lt;REG&gt; &lt;VAL&gt;          - set register value
+mr &lt;addr&gt; &lt;len&gt;              - memory read
+mw &lt;addr&gt; &lt;len&gt;              - memory write
+watch add &lt;expr&gt;             - watch add expr
+watch del &lt;expr&gt;             - watch del expr
+watch list                   - watch list
+locals                       - show locals/args of current frame
+stack                        - advanced stack viewer
+bt / where                   - show call stack</pre>
+              <p class="funcCardNote">Typical loop: <span class="mono">r</span> → <span class="mono">locals</span> → <span class="mono">mr</span>/<span class="mono">watch</span> → <span class="mono">bt</span>.</p>
+            </div>
+
+            <div class="card">
+              <h3>Breakpoints</h3>
+              <pre class="funcPre">
+break &lt;sym|file:line|*A&gt;     - set breakpoint
+bl / listbp                  - list breakpoint(s)
+bc &lt;idx|addr|all&gt;            - clear breakpoint(s)
+bh                           - breakpoint history</pre>
+              <p class="funcCardNote">Set by symbol / file:line / address (with <span class="mono">*A</span>).</p>
+            </div>
+
+            <div class="card">
+              <h3>Data Breakpoints</h3>
+              <pre class="funcPre">
+dw set &lt;addr&gt;                - data breakpoint set
+dw clear &lt;addr&gt;              - data breakpoint(s) clear
+dw list                      - data breakpoint(s) list</pre>
+              <p class="funcCardNote">For write/read triggers on addresses (target dependent).</p>
+            </div>
+
+            <div class="card">
+              <h3>Hardware Watchpoints</h3>
+              <pre class="funcPre">
+watchpoint &lt;addr&gt; [sz]       - hardware watchpoint
+unwatch &lt;addr&gt;               - remove watchpoint
+info watchpoints             - list watchpoints</pre>
+              <p class="funcCardNote">Use <span class="mono">[sz]</span> when your core requires a watch size.</p>
+            </div>
+
+            <div class="card">
+              <h3>RTT & Tools</h3>
+              <pre class="funcPre">
+rtt [auto/ch/ram/clear/help]    - RTT: one-shot/keep/ram/auto
+sv                              - source-code viewer</pre>
+              <p class="funcCardNote"><span class="mono">sv</span> opens the code viewer; <span class="mono">rtt</span> manages terminal streaming modes.</p>
+            </div>
+
+            <div class="card">
+              <h3>Help & Quit</h3>
+              <pre class="funcPre">
+help / ?                     - show help
+q                            - quit debugger</pre>
+              <p class="funcCardNote">Quick discovery: type <span class="mono">?</span> any time.</p>
+            </div>
+          </div>
+
+          <button class="arrow right" type="button" aria-label="Next" data-next>
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
         </div>
       </section>
 
