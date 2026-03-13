@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMSIS-DAP Driver — Compact, Universal, Plug-and-Play</title>
+  <style>
+    :root {
+      --bg: #1a0f07;
+      --bg-soft: #0c1825;
+      --card: rgba(15, 28, 42, 0.78);
+      --card-strong: rgba(18, 34, 50, 0.95);
+      --line: rgba(123, 174, 255, 0.16);
+      --line-strong: rgba(123, 174, 255, 0.34);
+      --text: #eaf2ff;
+      --muted: #9cb0c9;
+      --accent: #ff9a3c;
+      --accent-2: #ff6a00;
+      --accent-3: #ffb347;
+      --ok: #7ef3c8;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      --radius: 22px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,140,0,0.18), transparent 32%),
+        radial-gradient(circle at top right, rgba(255,94,0,0.18), transparent 28%),
+        linear-gradient(180deg, #2b1406 0%, #1f0f05 45%, #160a03 100%);
+      min-height: 100vh;
+      line-height: 1.65;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+      background: rgba(5, 11, 18, 0.62);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 72px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(125, 211, 252, 0.18), rgba(139, 92, 246, 0.22));
+      border: 1px solid var(--line-strong);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+      font-family: var(--mono);
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .hero {
+      padding: 72px 0 38px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-main {
+      padding: 34px;
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(16, 28, 43, 0.88), rgba(11, 20, 31, 0.94)),
+        radial-gradient(circle at top right, rgba(125, 211, 252, 0.18), transparent 34%);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: var(--accent);
+      background: rgba(125, 211, 252, 0.08);
+      border: 1px solid rgba(125, 211, 252, 0.18);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.3rem, 4vw, 4.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      max-width: 760px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 24px 0 28px;
+    }
+
+    .tag {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: #d6e4f8;
+      font-size: 0.93rem;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 14px;
+      border: 1px solid var(--line-strong);
+      background: linear-gradient(135deg, rgba(125, 211, 252, 0.18), rgba(34, 211, 238, 0.08));
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.08);
+      color: var(--muted);
+    }
+
+    .hero-side {
+      padding: 0;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      background: var(--card-strong);
+    }
+
+    .terminal {
+      padding: 24px 24px 18px;
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      color: #d5e5fb;
+      background:
+        linear-gradient(180deg, rgba(6, 12, 18, 0.94), rgba(9, 16, 25, 0.98)),
+        radial-gradient(circle at top, rgba(125, 211, 252, 0.1), transparent 40%);
+      min-height: 100%;
+    }
+
+    .terminal .dots {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .terminal .dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .terminal pre {
+      margin: 0;
+      white-space: pre-wrap;
+      color: #d7e8ff;
+    }
+
+    .terminal .hl { color: var(--ok); }
+    .terminal .acc { color: var(--accent); }
+    .terminal .mut { color: #87a0bb; }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .mini-stats .item {
+      padding: 18px 16px;
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .mini-stats .item:last-child { border-right: 0; }
+
+    .mini-stats strong {
+      display: block;
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+
+    .mini-stats span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    section {
+      padding: 42px 0;
+    }
+
+    .section-head {
+      margin-bottom: 20px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 8px;
+      font-size: clamp(1.55rem, 2.2vw, 2.15rem);
+      letter-spacing: -0.02em;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .grid-3 {
+      align-items: stretch;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      height: 100%;
+      padding: 24px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(15, 27, 41, 0.82), rgba(12, 21, 31, 0.95));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1.08rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 14px;
+    }
+
+    .list li {
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .list strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.98rem;
+    }
+
+    .list span {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .codebox {
+      background: #071018;
+      border: 1px solid rgba(125, 211, 252, 0.14);
+      border-radius: 18px;
+      padding: 22px;
+      overflow: auto;
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      color: #dce9fb;
+      line-height: 1.75;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+
+    .arch{
+      margin: 10px auto 6px auto;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      font-family:var(--mono);
+      font-size:1rem;
+    }
+
+    .arch .node{
+      padding:8px 16px;
+      border-radius:10px;
+      border:1px solid var(--line-strong);
+      background:rgba(255,255,255,0.03);
+    }
+
+    .arch .arrow{
+      color:var(--accent);
+      font-size:1.2rem;
+      line-height:1;
+    }
+
+    .codebox {
+      background: #071018;
+      border: 1px solid rgba(125, 211, 252, 0.14);
+      border-radius: 18px;
+      padding: 22px;
+      overflow: auto;
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      color: #dce9fb;
+      line-height: 1.75;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+
+    .codebox .k { color: #8b5cf6; }
+    .codebox .v { color: #7dd3fc; }
+    .codebox .c { color: #7ef3c8; }
+    .codebox .m { color: #8ea6c2; }
+
+    .band {
+      padding: 28px;
+      border-radius: 24px;
+      background:
+        linear-gradient(135deg, rgba(125, 211, 252, 0.12), rgba(139, 92, 246, 0.14)),
+        rgba(11, 20, 31, 0.92);
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .band p {
+      margin: 0;
+      color: #dce9fb;
+      font-size: 1.06rem;
+    }
+
+    .footer {
+      padding: 42px 0 56px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .grid-3,
+      .split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .wrap { width: min(100% - 20px, 1120px); }
+      .nav-inner { align-items: flex-start; padding: 12px 0; }
+      .hero { padding-top: 42px; }
+      .hero-main { padding: 24px; }
+      .terminal { padding: 20px; }
+      .mini-stats { grid-template-columns: 1fr; }
+      .mini-stats .item { border-right: 0; border-top: 1px solid rgba(255,255,255,0.06); }
+      .mini-stats .item:first-child { border-top: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <div class="brand">
+        <div class="brand-badge">DAP</div>
+        <div>CMSIS-DAP Driver</div>
+      </div>
+      <nav class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#features">Features</a>
+        <a href="#supported-probes">Supported Probes</a>
+        <a href="#compatibility">Compatibility</a>
+        <a href="#why-driver">Why</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="panel hero-main">
+          <div class="eyebrow">≈28 KB · Universal CMSIS-DAP Driver · Multi‑Probe Support</div>
+          <h1>A Tiny Universal CMSIS-DAP Driver</h1>
+          <p class="subtitle">Universal CMSIS-DAP backend for lightweight debuggers · ≈28 KB footprint · Multi‑probe support</p>
+          <p class="subtitle">
+            This driver is a general-purpose CMSIS-DAP driver that can work without vendor-specific drivers and supports
+            MCU-LINK, J-Link in DAP mode, Pico Debug Probe, and virtually any DAP probe that follows the CMSIS-DAP standard.
+          </p>
+          <div class="hero-tags">
+            <span class="tag">MCU-LINK</span>
+            <span class="tag">J-Link (DAP mode)</span>
+            <span class="tag">Pico Debug Probe</span>
+            <span class="tag">Generic CMSIS-DAP Probes</span>
+            <span class="tag">Pure C</span>
+            <span class="tag">Compact Debugger Ready</span>
+          </div>
+          <div class="cta-row">
+            <a class="btn" href="#overview">Explore the Driver</a>
+            <a class="btn secondary" href="#integration">See Integration Notes</a>
+          </div>
+        </div>
+
+        <div class="panel hero-side">
+          <div class="terminal">
+            <div class="dots"><span></span><span></span><span></span></div>
+<pre><span class="mut">$</span> <span class="acc">cd</span> --probe cmsis-dap --target RP2040
+
+<span class="hl">[ok]</span> probe detected: CMSIS-DAP
+<span class="hl">[ok]</span> transport: SWD
+<span class="hl">[ok]</span> backend: generic compact driver
+<span class="hl">[ok]</span> compatible probes:
+  <span class="acc">-</span> MCU-LINK
+  <span class="acc">-</span> J-Link (DAP mode)
+  <span class="acc">-</span> Pico Debug Probe
+  <span class="acc">-</span> other standard CMSIS-DAP probes
+
+<span class="mut">footprint:</span> <span class="acc">small</span>
+<span class="mut">deps:</span> <span class="acc">minimal</span>
+<span class="mut">usage:</span> <span class="acc">Compact Debugger</span></pre>
+          </div>
+          <div class="mini-stats">
+            <div class="item">
+              <strong>Universal</strong>
+              <span>Works with standard CMSIS-DAP probes including MCU‑LINK, J‑Link (DAP mode), and Pico Debug Probe</span>
+            </div>
+            <div class="item">
+              <strong>≈28 KB</strong>
+              <span>Typical compiled size around 28 KB</span>
+            </div>
+            <div class="item">
+              <strong>Direct</strong>
+              <span>Pairs naturally with Compact Debugger</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="overview">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Overview</h2>
+          <p>
+            The goal of this driver is simple: provide a clean, reusable, general CMSIS-DAP backend that stays lightweight,
+            portable, and practical for embedded debugging tools.
+          </p>
+        </div>
+        <div class="band">
+          <p>
+            This CMSIS-DAP driver is a generic implementation for standard DAP probes. The compiled driver is typically about 28 KB, keeping the debugging stack extremely lightweight. It can be used without installing
+            vendor-specific probe drivers, making it a convenient backend for tools that need broad hardware compatibility
+            with a very small footprint.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Core Features</h2>
+          <p>Small, practical, and made for real embedded workflows.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <h3>Universal CMSIS-DAP Support</h3>
+            <p>
+              Built as a general CMSIS-DAP driver, it can communicate with a wide range of debug probes that implement the standard protocol.
+            </p>
+          </article>
+          <article class="card">
+            <h3>No Vendor Lock-In</h3>
+            <p>
+              Use one backend for multiple probes instead of maintaining separate probe-specific integrations.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Very Small Footprint</h3>
+            <p>
+              The implementation is intentionally compact, making it suitable for lightweight debugger projects and minimal toolchains.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="supported-probes">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Supported CMSIS-DAP Probes</h2>
+          <p>Examples of debug probes that work directly with this generic CMSIS-DAP driver.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <h3>MCU-LINK</h3>
+            <p>NXP CMSIS-DAP based debug probe commonly used with LPC and MCX development boards.</p>
+          </article>
+          <article class="card">
+            <h3>J-Link (DAP Mode)</h3>
+            <p>SEGGER J-Link devices can operate in CMSIS-DAP compatible mode and work with the same driver backend.</p>
+          </article>
+          <article class="card">
+            <h3>Pico Debug Probe</h3>
+            <p>Raspberry Pi RP2040-based debug probe implementing the CMSIS-DAP protocol.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="compatibility">
+      <div class="wrap split">
+        <div>
+          <div class="section-head">
+            <h2>Probe Compatibility</h2>
+            <p>Examples of probes that can be used with this driver.</p>
+          </div>
+          <ul class="list">
+            <li>
+              <strong>MCU-LINK</strong>
+              <span>Works as a standard CMSIS-DAP probe without requiring a dedicated custom backend.</span>
+            </li>
+            <li>
+              <strong>J-Link in DAP Mode</strong>
+              <span>Can be used when the J-Link device is configured to expose CMSIS-DAP behavior.</span>
+            </li>
+            <li>
+              <strong>Pico Debug Probe</strong>
+              <span>Fits naturally into the same generic CMSIS-DAP workflow.</span>
+            </li>
+            <li>
+              <strong>Other DAP Probes</strong>
+              <span>Any probe that follows the CMSIS-DAP protocol can generally be supported by the same driver layer.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="margin-top:0; margin-bottom:14px;">Why this matters</h3>
+          <p style="margin-bottom:16px;">
+            In embedded tooling, probe diversity often becomes integration overhead. A generic CMSIS-DAP layer cuts that overhead down and keeps the debugger architecture cleaner.
+          </p>
+          <div class="codebox"><div class="arch">
+  <div class="node">Target MCU</div>
+  <div class="arrow">↓</div>
+  <div class="node">Probe</div>
+  <div class="arrow">↓</div>
+  <div class="node">CMSIS-DAP Driver</div>
+  <div class="arrow">↓</div>
+  <div class="node">Compact Debugger</div>
+</div></div>
+            <p style="margin-top:16px; color: var(--muted);">
+              This layout keeps the responsibilities clear: the hardware probe talks to the target, the CMSIS-DAP driver provides a compact access layer, and Compact Debugger builds the user-facing debugging workflow on top.
+            </p>
+          </div>
+          <div class="card">
+            <h3 style="margin-top:0; margin-bottom:14px;">Works with Compact Debugger</h3>
+            <ul class="list">
+              <li>
+                <strong>Natural Backend Pairing</strong>
+                <span>Use the CMSIS-DAP driver as the probe access layer while Compact Debugger handles the debugging workflow and interface.</span>
+              </li>
+              <li>
+                <strong>Minimal Integration Cost</strong>
+                <span>The roughly 28 KB footprint makes it practical to include directly instead of depending on a large external framework.</span>
+              </li>
+              <li>
+                <strong>Broad Hardware Reach</strong>
+                <span>One compact debugger stack can support several common CMSIS-DAP probes with the same backend design.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="why-driver">
+      <div class="wrap split">
+        <div class="card">
+          <div class="section-head">
+            <h2 style="margin-bottom:8px;">Why This Driver Exists</h2>
+            <p>
+              Many debugging frameworks are powerful, but they can also be larger and more layered than necessary for compact tools.
+            </p>
+          </div>
+          <ul class="list">
+            <li>
+              <strong>Built for Lightweight Tools</strong>
+              <span>This driver focuses on the CMSIS-DAP essentials needed by a compact debugger, instead of pulling in a much larger probe stack.</span>
+            </li>
+            <li>
+              <strong>Less Overhead</strong>
+              <span>A small dedicated backend is easier to embed, easier to understand, and easier to adapt for custom debugger workflows.</span>
+            </li>
+            <li>
+              <strong>Portable by Design</strong>
+              <span>The goal is broad CMSIS-DAP probe compatibility with minimal dependency weight and minimal integration friction.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="margin-top:0; margin-bottom:14px;">Project Direction</h3>
+          <div class="codebox">
+<span class="c">Why not rely on a heavier stack?</span>
+<p><span class="m">•</span> This project targets <span class="v">compact debugging workflows</span></p>
+<p><span class="m">•</span> The driver stays focused on <span class="v">generic CMSIS-DAP access</span></p>
+<p><span class="m">•</span> The result is a backend that is <span class="v">small</span>, <span class="v">practical</span>, and <span class="v">easy to integrate</span></p>
+
+<span class="c">Goal:</span> 
+<p><span class="m">•</span> keep the debugger stack lean without giving up broad probe support.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      ≈28 KB · Universal CMSIS-DAP Driver · Multi‑Probe Support
+    </div>
+  </footer>
+</body>
+</html>
