@@ -442,7 +442,8 @@
         <a href="#overview">Overview</a>
         <a href="#features">Features</a>
         <a href="#supported-probes">Supported Probes</a>
-        <a href="#compatibility">Compatibility</a>
+        <a href="#compact">Compact Size</a>
+        <a href="#integration">Architecture</a>
         <a href="#why-driver">Why</a>
       </nav>
     </div>
@@ -452,7 +453,7 @@
     <section class="hero">
       <div class="wrap hero-grid">
         <div class="panel hero-main">
-          <div class="eyebrow">≈28 KB · Universal CMSIS-DAP Driver · Multi‑Probe Support</div>
+          <div class="eyebrow">≈28 KB · Universal CMSIS-DAP · Multi‑Probe Support</div>
           <h1>A Tiny Universal CMSIS-DAP Driver</h1>
           <p class="subtitle">Universal CMSIS-DAP backend for lightweight debuggers · ≈28 KB footprint · Multi‑probe support</p>
           <p class="subtitle">
@@ -565,14 +566,17 @@
         </div>
         <div class="grid-3">
           <article class="card">
+            <img src="pic/MCU-LINK.png" alt="MCU-LINK" style="width:100%; max-height:180px; object-fit:contain; margin-bottom:12px;" />
             <h3>MCU-LINK</h3>
             <p>NXP CMSIS-DAP based debug probe commonly used with LPC and MCX development boards.</p>
           </article>
           <article class="card">
+            <img src="pic/JLINK.png" alt="J-Link" style="width:100%; max-height:180px; object-fit:contain; margin-bottom:12px;" />
             <h3>J-Link (DAP Mode)</h3>
             <p>SEGGER J-Link devices can operate in CMSIS-DAP compatible mode and work with the same driver backend.</p>
           </article>
           <article class="card">
+            <img src="pic/PICO_PROBE.png" alt="Pico Debug Probe" style="width:100%; max-height:180px; object-fit:contain; margin-bottom:12px;" />
             <h3>Pico Debug Probe</h3>
             <p>Raspberry Pi RP2040-based debug probe implementing the CMSIS-DAP protocol.</p>
           </article>
@@ -580,36 +584,43 @@
       </div>
     </section>
 
-    <section id="compatibility">
-      <div class="wrap split">
-        <div>
-          <div class="section-head">
-            <h2>Probe Compatibility</h2>
-            <p>Examples of probes that can be used with this driver.</p>
-          </div>
-          <ul class="list">
-            <li>
-              <strong>MCU-LINK</strong>
-              <span>Works as a standard CMSIS-DAP probe without requiring a dedicated custom backend.</span>
-            </li>
-            <li>
-              <strong>J-Link in DAP Mode</strong>
-              <span>Can be used when the J-Link device is configured to expose CMSIS-DAP behavior.</span>
-            </li>
-            <li>
-              <strong>Pico Debug Probe</strong>
-              <span>Fits naturally into the same generic CMSIS-DAP workflow.</span>
-            </li>
-            <li>
-              <strong>Other DAP Probes</strong>
-              <span>Any probe that follows the CMSIS-DAP protocol can generally be supported by the same driver layer.</span>
-            </li>
-          </ul>
+    <section id="compact">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Designed to Stay Compact</h2>
+          <p>
+            The driver is intentionally small and direct. In typical builds the footprint is roughly 28 KB, making it easy to embed inside compact debugging tools.
+          </p>
         </div>
+        <div class="grid-3">
+          <article class="card">
+            <h3>Pure and Focused</h3>
+            <p>
+              The implementation targets what a practical CMSIS-DAP backend needs, without unnecessary complexity.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Easy to Reuse</h3>
+            <p>
+              A compact codebase is easier to read, integrate, adapt, and maintain inside custom debugger projects.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Good Fit for Embedded Tools</h3>
+            <p>
+              Especially suitable for terminal-based or lightweight GUI debuggers that want broad probe support without becoming heavy.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="integration">
+      <div class="wrap split">
         <div class="card">
-          <h3 style="margin-top:0; margin-bottom:14px;">Why this matters</h3>
-          <p style="margin-bottom:16px;">
-            In embedded tooling, probe diversity often becomes integration overhead. A generic CMSIS-DAP layer cuts that overhead down and keeps the debugger architecture cleaner.
+          <h3 style="margin-top:0; margin-bottom:14px;">Architecture</h3>
+          <p style="margin-bottom:16px; color: var(--muted);">
+            A simple and clean layering model keeps responsibilities clear across the whole debugging stack.
           </p>
           <div class="codebox"><div class="arch">
   <div class="node">Target MCU</div>
@@ -620,27 +631,26 @@
   <div class="arrow">↓</div>
   <div class="node">Compact Debugger</div>
 </div></div>
-            <p style="margin-top:16px; color: var(--muted);">
-              This layout keeps the responsibilities clear: the hardware probe talks to the target, the CMSIS-DAP driver provides a compact access layer, and Compact Debugger builds the user-facing debugging workflow on top.
-            </p>
-          </div>
-          <div class="card">
-            <h3 style="margin-top:0; margin-bottom:14px;">Works with Compact Debugger</h3>
-            <ul class="list">
-              <li>
-                <strong>Natural Backend Pairing</strong>
-                <span>Use the CMSIS-DAP driver as the probe access layer while Compact Debugger handles the debugging workflow and interface.</span>
-              </li>
-              <li>
-                <strong>Minimal Integration Cost</strong>
-                <span>The roughly 28 KB footprint makes it practical to include directly instead of depending on a large external framework.</span>
-              </li>
-              <li>
-                <strong>Broad Hardware Reach</strong>
-                <span>One compact debugger stack can support several common CMSIS-DAP probes with the same backend design.</span>
-              </li>
-            </ul>
-          </div>
+          <p style="margin-top:16px; color: var(--muted);">
+            This layout keeps the responsibilities clear: the probe talks to the target MCU, the CMSIS-DAP driver provides a compact access layer, and Compact Debugger builds the user-facing debugging workflow on top.
+          </p>
+        </div>
+        <div class="card">
+          <h3 style="margin-top:0; margin-bottom:14px;">Works with Compact Debugger</h3>
+          <ul class="list">
+            <li>
+              <strong>Natural Backend Pairing</strong>
+              <span>Use the CMSIS-DAP driver as the probe access layer while Compact Debugger handles the debugging workflow and interface.</span>
+            </li>
+            <li>
+              <strong>Minimal Integration Cost</strong>
+              <span>The roughly 28 KB footprint makes it practical to include directly instead of depending on a large external framework.</span>
+            </li>
+            <li>
+              <strong>Broad Hardware Reach</strong>
+              <span>One compact debugger stack can support several common CMSIS-DAP probes with the same backend design.</span>
+            </li>
+          </ul>
         </div>
       </div>
     </section>
@@ -673,12 +683,12 @@
           <h3 style="margin-top:0; margin-bottom:14px;">Project Direction</h3>
           <div class="codebox">
 <span class="c">Why not rely on a heavier stack?</span>
-<p><span class="m">•</span> This project targets <span class="v">compact debugging workflows</span></p>
-<p><span class="m">•</span> The driver stays focused on <span class="v">generic CMSIS-DAP access</span></p>
-<p><span class="m">•</span> The result is a backend that is <span class="v">small</span>, <span class="v">practical</span>, and <span class="v">easy to integrate</span></p>
 
-<span class="c">Goal:</span> 
-<p><span class="m">•</span> keep the debugger stack lean without giving up broad probe support.</p>
+<span class="m">•</span> This project targets <span class="v">compact debugging workflows</span>
+<span class="m">•</span> The driver stays focused on <span class="v">generic CMSIS-DAP access</span>
+<span class="m">•</span> The result is a backend that is <span class="v">small</span>, <span class="v">practical</span>, and <span class="v">easy to integrate</span>
+
+<span class="c">Goal:</span> keep the debugger stack lean without giving up broad probe support.
           </div>
         </div>
       </div>
@@ -687,7 +697,7 @@
 
   <footer class="footer">
     <div class="wrap">
-      ≈28 KB · Universal CMSIS-DAP Driver · Multi‑Probe Support
+      CMSIS-DAP Driver page · styled to match the existing Compact Debugger site direction.
     </div>
   </footer>
 </body>

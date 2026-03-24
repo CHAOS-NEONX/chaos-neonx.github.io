@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Compact Debugger (CHAOS Debugger) — Embedded-Focused TUI Debugger</title>
-  <meta name="description" content="Compact Debugger (CHAOS Debugger / CD): pure C, ~500KB, embedded-focused TUI debugger with heterogeneous multi-core, J-Link, RTT, and better library debugging without source." />
+  <meta name="description" content="Compact Debugger (CHAOS Debugger / CD): pure C, ~500KB, embedded-focused TUI debugger with heterogeneous multi-core, CMSIS-DAP, J-Link, RTT, and better library debugging without source." />
 
   <style>
     /* Local Inter (woff2) */
@@ -876,12 +876,12 @@
         <aside class="panel" aria-label="terminal preview">
           <div class="top">
             <div class="chips" aria-label="highlights">
-              <span class="chip">TUI UI</span>
+              <span class="chip">TUI</span>
               <span class="chip">Multi-core</span>
-              <span class="chip">J-Link</span>
+              <span class="chip">CMSIS-DAP / J-Link</span>
               <span class="chip">RTT</span>
             </div>
-            <span class="chip mono">CD v0.x (beta)</span>
+            <span class="chip mono">CD v0.x(β)</span>
           </div>
 
           <div class="screen">
@@ -905,7 +905,7 @@
               </div>
               <div class="item">
                 <div class="k">Probe</div>
-                <div class="v"><strong>Direct</strong> J-Link support</div>
+                <div class="v"><strong>CMSIS-DAP / J-Link</strong> Direct support</div>
               </div>
               <div class="item">
                 <div class="k">Scope</div>
@@ -949,8 +949,8 @@
             </div>
 
             <div class="card">
-              <h3>Direct J-Link Integration</h3>
-              <p>Connect and debug without extra layers—optimized for J-Link based setups.</p>
+              <h3>Direct CMSIS-DAP / J-Link Integration</h3>
+              <p>Connect and debug without extra layers—optimized for CMSIS-DAP / J-Link based setups.</p>
             </div>
 
             <div class="card">
@@ -1121,7 +1121,12 @@ q                            - quit debugger</pre>
 
         <div class="card">
           <ul>
-            <li><strong>More probes:</strong> add support for additional debug probes beyond J-Link.</li>
+            <li>
+			  <strong>More probes:</strong> add support for additional debug probes beyond J-Link.
+			  <a href="cmsis-dap.html" style="color: darkgreen;">
+				<strong>Finished(0324) — learn more</strong>
+			  </a>
+			</li>
             <li><strong>Peripheral View:</strong> add a dedicated peripheral/register view for faster bring-up and debugging.</li>
           </ul>
         </div>
@@ -1135,7 +1140,7 @@ q                            - quit debugger</pre>
 
         <div class="card">
           <ul>
-            <li><strong>Hardware:</strong> J-Link</li>
+            <li><strong>Hardware:</strong> CMSIS-DAP / J-Link</li>
             <li><strong>Software:</strong> Ubuntu</li>
             <li><strong>License:</strong> </li>
           </ul>
